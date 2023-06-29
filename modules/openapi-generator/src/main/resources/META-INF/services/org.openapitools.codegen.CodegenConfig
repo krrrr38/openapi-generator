@@ -117,6 +117,7 @@ org.openapitools.codegen.languages.ScalaAkkaHttpServerCodegen
 org.openapitools.codegen.languages.ScalaFinchServerCodegen
 org.openapitools.codegen.languages.ScalaGatlingCodegen
 org.openapitools.codegen.languages.ScalaLagomServerCodegen
+org.openapitools.codegen.languages.ScalaPekkoHttpServerCodegen
 org.openapitools.codegen.languages.ScalaPlayFrameworkServerCodegen
 org.openapitools.codegen.languages.ScalaSttpClientCodegen
 org.openapitools.codegen.languages.ScalaSttp4ClientCodegen
