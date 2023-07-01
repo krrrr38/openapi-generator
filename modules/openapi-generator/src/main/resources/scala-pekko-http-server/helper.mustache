@@ -1,11 +1,11 @@
 package {{invokerPackage}}
 
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{PathMatcher, PathMatcher1}
+import org.apache.pekko.http.scaladsl.server.Directives._
+import org.apache.pekko.http.scaladsl.server.{PathMatcher, PathMatcher1}
 import scala.util.{Failure, Success, Try}
 import scala.util.control.NoStackTrace
 
-object AkkaHttpHelper {
+object PekkoHttpHelper {
   def optToTry[T](opt: Option[T], err: => String): Try[T] =
     opt.map[Try[T]](Success(_)) getOrElse Failure(new RuntimeException(err) with NoStackTrace)
 

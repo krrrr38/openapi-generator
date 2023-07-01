@@ -1,17 +1,17 @@
 package {{package}}
 
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.model.StatusCodes
-{{^pathMatcherPatterns.isEmpty}}import akka.http.scaladsl.server.{PathMatcher, PathMatcher1}
+import org.apache.pekko.http.scaladsl.server.Directives._
+import org.apache.pekko.http.scaladsl.server.Route
+import org.apache.pekko.http.scaladsl.model.StatusCodes
+{{^pathMatcherPatterns.isEmpty}}import org.apache.pekko.http.scaladsl.server.{PathMatcher, PathMatcher1}
 {{/pathMatcherPatterns.isEmpty}}
-{{#hasMarshalling}}import akka.http.scaladsl.marshalling.ToEntityMarshaller
-import akka.http.scaladsl.unmarshalling.FromEntityUnmarshaller
-import akka.http.scaladsl.unmarshalling.FromStringUnmarshaller
+{{#hasMarshalling}}import org.apache.pekko.http.scaladsl.marshalling.ToEntityMarshaller
+import org.apache.pekko.http.scaladsl.unmarshalling.FromEntityUnmarshaller
+import org.apache.pekko.http.scaladsl.unmarshalling.FromStringUnmarshaller
 {{/hasMarshalling}}
-{{#hasCookieParams}}import akka.http.scaladsl.model.headers.HttpCookiePair
+{{#hasCookieParams}}import org.apache.pekko.http.scaladsl.model.headers.HttpCookiePair
 {{/hasCookieParams}}
-import {{invokerPackage}}.AkkaHttpHelper._
+import {{invokerPackage}}.PekkoHttpHelper._
 {{#hasMultipart}}import {{invokerPackage}}.StringDirectives
 import {{invokerPackage}}.MultipartDirectives
 import {{invokerPackage}}.FileField
@@ -20,8 +20,8 @@ import {{invokerPackage}}.PartsAndFiles
 {{#imports}}import {{import}}
 {{/imports}}
 {{#hasMultipart}}import scala.util.Try
-import akka.http.scaladsl.server.MalformedRequestContentRejection
-import akka.http.scaladsl.server.directives.FileInfo
+import org.apache.pekko.http.scaladsl.server.MalformedRequestContentRejection
+import org.apache.pekko.http.scaladsl.server.directives.FileInfo
 {{/hasMultipart}}
 
 

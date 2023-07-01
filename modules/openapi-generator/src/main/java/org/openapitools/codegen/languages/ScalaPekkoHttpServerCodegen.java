@@ -26,29 +26,33 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
     protected String artifactVersion;
     protected String invokerPackage;
 
-    protected String akkaHttpVersion;
+    protected String pekkoVersion;
+    protected String pekkoHttpVersion;
     protected boolean generateAsManagedSources;
 
-    public static final String AKKA_HTTP_VERSION = "akkaHttpVersion";
-    public static final String AKKA_HTTP_VERSION_DESC = "The version of akka-http";
-    public static final String DEFAULT_AKKA_HTTP_VERSION = "10.1.10";
+    public static final String PEKKO_VERSION = "pekkoVersion";
+    public static final String PEKKO_VERSION_DESC = "The version of pekko";
+    public static final String DEFAULT_PEKKO_VERSION = "1.0.0-RC3+5-be45ac14-SNAPSHOT";
+    public static final String PEKKO_HTTP_VERSION = "pekkoHttpVersion";
+    public static final String PEKKO_HTTP_VERSION_DESC = "The version of pekko-http";
+    public static final String DEFAULT_PEKKO_HTTP_VERSION = "0.0.0+4455-91b6086b-SNAPSHOT";
 
     public static final String GENERATE_AS_MANAGED_SOURCES = "asManagedSources";
     public static final String GENERATE_AS_MANAGED_SOURCES_DESC = "Resulting files cab be used as managed resources. No build files or default controllers will be generated";
     public static final boolean DEFAULT_GENERATE_AS_MANAGED_SOURCES = false;
 
-    final Logger LOGGER = LoggerFactory.getLogger(ScalaAkkaHttpServerCodegen.class);
+    final Logger LOGGER = LoggerFactory.getLogger(ScalaPekkoHttpServerCodegen.class);
 
     public CodegenType getTag() {
         return CodegenType.SERVER;
     }
 
     public String getName() {
-        return "scala-akka-http-server";
+        return "scala-pekko-http-server";
     }
 
     public String getHelp() {
-        return "Generates a scala-akka-http server (beta).";
+        return "Generates a scala-pekko-http server.";
     }
 
     public ScalaPekkoHttpServerCodegen() {
@@ -79,18 +83,19 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
                 .stability(Stability.BETA)
                 .build();
 
-        outputFolder = "generated-code" + File.separator + "scala-akka-http";
+        outputFolder = "generated-code" + File.separator + "scala-pekko-http";
         modelTemplateFiles.put("model.mustache", ".scala");
         apiTemplateFiles.put("api.mustache", ".scala");
-        embeddedTemplateDir = templateDir = "scala-akka-http-server";
+        embeddedTemplateDir = templateDir = "scala-pekko-http-server";
 
         groupId = "org.openapitools";
-        artifactId = "openapi-scala-akka-http-server";
+        artifactId = "openapi-scala-pekko-http-server";
         artifactVersion = "1.0.0";
         apiPackage = "org.openapitools.server.api";
         modelPackage = "org.openapitools.server.model";
         invokerPackage = "org.openapitools.server";
-        akkaHttpVersion = DEFAULT_AKKA_HTTP_VERSION;
+        pekkoVersion = DEFAULT_PEKKO_VERSION;
+        pekkoHttpVersion = DEFAULT_PEKKO_HTTP_VERSION;
         generateAsManagedSources = DEFAULT_GENERATE_AS_MANAGED_SOURCES;
 
         setReservedWordsLowerCase(
@@ -106,7 +111,8 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
         cliOptions.add(CliOption.newString(CodegenConstants.GROUP_ID, CodegenConstants.GROUP_ID_DESC).defaultValue(groupId));
         cliOptions.add(CliOption.newString(CodegenConstants.ARTIFACT_ID, CodegenConstants.ARTIFACT_ID).defaultValue(artifactId));
         cliOptions.add(CliOption.newString(CodegenConstants.ARTIFACT_VERSION, CodegenConstants.ARTIFACT_VERSION_DESC).defaultValue(artifactVersion));
-        cliOptions.add(CliOption.newString(AKKA_HTTP_VERSION, AKKA_HTTP_VERSION_DESC).defaultValue(akkaHttpVersion));
+        cliOptions.add(CliOption.newString(PEKKO_VERSION, PEKKO_VERSION_DESC).defaultValue(pekkoVersion));
+        cliOptions.add(CliOption.newString(PEKKO_HTTP_VERSION, PEKKO_HTTP_VERSION_DESC).defaultValue(pekkoHttpVersion));
         cliOptions.add(CliOption.newBoolean(GENERATE_AS_MANAGED_SOURCES, GENERATE_AS_MANAGED_SOURCES_DESC).defaultValue(Boolean.valueOf(DEFAULT_GENERATE_AS_MANAGED_SOURCES).toString()));
 
         importMapping.remove("Seq");
@@ -165,14 +171,17 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
             additionalProperties.put(CodegenConstants.ARTIFACT_VERSION, artifactVersion);
         }
 
-        if (additionalProperties.containsKey(AKKA_HTTP_VERSION)) {
-            akkaHttpVersion = (String) additionalProperties.get(AKKA_HTTP_VERSION);
+        if (additionalProperties.containsKey(PEKKO_VERSION)) {
+            pekkoVersion = (String) additionalProperties.get(PEKKO_VERSION);
         } else {
-            additionalProperties.put(AKKA_HTTP_VERSION, akkaHttpVersion);
+            additionalProperties.put(PEKKO_VERSION, pekkoVersion);
         }
 
-        parseAkkaHttpVersion();
-
+        if (additionalProperties.containsKey(PEKKO_HTTP_VERSION)) {
+            pekkoHttpVersion = (String) additionalProperties.get(PEKKO_HTTP_VERSION);
+        } else {
+            additionalProperties.put(PEKKO_HTTP_VERSION, pekkoHttpVersion);
+        }
 
         if (additionalProperties.containsKey(GENERATE_AS_MANAGED_SOURCES)) {
             generateAsManagedSources = Boolean.parseBoolean(additionalProperties.get(GENERATE_AS_MANAGED_SOURCES).toString());
@@ -187,58 +196,11 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
             supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
         }
         supportingFiles.add(new SupportingFile("helper.mustache",
-                (sourceFolder + File.separator + invokerPackage).replace(".", java.io.File.separator), "AkkaHttpHelper.scala"));
+                (sourceFolder + File.separator + invokerPackage).replace(".", java.io.File.separator), "PekkoHttpHelper.scala"));
         supportingFiles.add(new SupportingFile("stringDirectives.mustache",
                 (sourceFolder + File.separator + invokerPackage).replace(".", java.io.File.separator), "StringDirectives.scala"));
         supportingFiles.add(new SupportingFile("multipartDirectives.mustache",
                 (sourceFolder + File.separator + invokerPackage).replace(".", java.io.File.separator), "MultipartDirectives.scala"));
-    }
-
-    private static final String IS_10_1_10_PLUS = "akkaHttp10_1_10_plus";
-    private boolean is10_1_10AndAbove = false;
-
-    private static final Pattern akkaVersionPattern = Pattern.compile("([0-9]+)(\\.([0-9]+))?(\\.([0-9]+))?(.\\+)?");
-
-    private void parseAkkaHttpVersion() {
-        Matcher matcher = akkaVersionPattern.matcher(akkaHttpVersion);
-        if (matcher.matches()) {
-            String majorS = matcher.group(1);
-            String minorS = matcher.group(3);
-            String patchS = matcher.group(5);
-            boolean andAbove = matcher.group(6) != null;
-            int major = -1, minor = -1, patch = -1;
-            try {
-                if (majorS != null) {
-                    major = Integer.parseInt(majorS);
-                    if (minorS != null) {
-                        minor = Integer.parseInt(minorS);
-                        if (patchS != null) {
-                            patch = Integer.parseInt(patchS);
-                        }
-                    }
-                }
-
-
-                if (major > 10 || major == -1 && andAbove) {
-                    is10_1_10AndAbove = true;
-                } else if (major == 10) {
-                    if (minor > 1 || minor == -1 && andAbove) {
-                        is10_1_10AndAbove = true;
-                    } else if (minor == 1) {
-                        if (patch >= 10 || patch == -1 && andAbove) {
-                            is10_1_10AndAbove = true;
-                        }
-                    }
-                }
-
-            } catch (NumberFormatException e) {
-                LOGGER.warn("Unable to parse {}: {}, fallback to {}", AKKA_HTTP_VERSION, akkaHttpVersion, DEFAULT_AKKA_HTTP_VERSION);
-                akkaHttpVersion = DEFAULT_AKKA_HTTP_VERSION;
-                is10_1_10AndAbove = true;
-            }
-        }
-
-        additionalProperties.put(IS_10_1_10_PLUS, is10_1_10AndAbove);
     }
 
     @Override
@@ -297,9 +259,9 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
         LinkedList<String> allPaths = new LinkedList<>(Arrays.asList(codegenOperation.path.split("/")));
         allPaths.removeIf(""::equals);
 
-        LinkedList<org.openapitools.codegen.languages.TextOrMatcher> pathMatchers = new LinkedList<>();
+        LinkedList<TextOrMatcher> pathMatchers = new LinkedList<>();
         for (String path : allPaths) {
-            org.openapitools.codegen.languages.TextOrMatcher textOrMatcher = new org.openapitools.codegen.languages.TextOrMatcher("", true);
+            TextOrMatcher textOrMatcher = new TextOrMatcher("", true);
             if (path.startsWith("{") && path.endsWith("}")) {
                 String parameterName = path.substring(1, path.length() - 1);
                 for (CodegenParameter pathParam : codegenOperation.pathParams) {
@@ -307,7 +269,7 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
                         String matcher = pathTypeToMatcher.get(pathParam.dataType);
                         if (matcher == null) {
                             LOGGER.warn(
-                                    "The path parameter {} with the datatype {} could not be translated to a corresponding path matcher of akka http and therefore has been translated to string.",
+                                    "The path parameter {} with the datatype {} could not be translated to a corresponding path matcher of pekko http and therefore has been translated to string.",
                                     pathParam.baseName, pathParam.dataType);
                             matcher = pathTypeToMatcher.get("String");
                         }
@@ -332,7 +294,7 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
 
     private static void pathMatcherPatternsPostProcessor(OperationsMap objs) {
         if (objs != null) {
-            HashMap<String, org.openapitools.codegen.languages.PathMatcherPattern> patternMap = new HashMap<>();
+            HashMap<String, PathMatcherPattern> patternMap = new HashMap<>();
             OperationMap operations = objs.getOperations();
             if (operations != null) {
                 List<CodegenOperation> ops = operations.getOperation();
@@ -341,7 +303,7 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
                         if (parameter.pattern != null && !parameter.pattern.isEmpty()) {
                             String name = pathMatcherPatternName(parameter);
                             if (!patternMap.containsKey(name)) {
-                                patternMap.put(name, new org.openapitools.codegen.languages.PathMatcherPattern(name, parameter.pattern.substring(1, parameter.pattern.length() - 1)));
+                                patternMap.put(name, new PathMatcherPattern(name, parameter.pattern.substring(1, parameter.pattern.length() - 1)));
                             }
                         }
                     }
@@ -357,14 +319,13 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
 
     // Responsible for setting up Marshallers/Unmarshallers
     public static void marshallingPostProcessor(OperationsMap objs) {
-
         if (objs == null) {
             return;
         }
 
-        Set<org.openapitools.codegen.languages.Marshaller> entityUnmarshallerTypes = new HashSet<>();
-        Set<org.openapitools.codegen.languages.Marshaller> entityMarshallerTypes = new HashSet<>();
-        Set<org.openapitools.codegen.languages.Marshaller> stringUnmarshallerTypes = new HashSet<>();
+        Set<Marshaller> entityUnmarshallerTypes = new HashSet<>();
+        Set<Marshaller> entityMarshallerTypes = new HashSet<>();
+        Set<Marshaller> stringUnmarshallerTypes = new HashSet<>();
         boolean hasCookieParams = false;
         boolean hasMultipart = false;
 
@@ -387,17 +348,17 @@ public class ScalaPekkoHttpServerCodegen extends AbstractScalaCodegen implements
                         }
                         if (!parameter.isPrimitiveType) {
                             if (isMultipart) {
-                                stringUnmarshallerTypes.add(new org.openapitools.codegen.languages.Marshaller(parameter));
+                                stringUnmarshallerTypes.add(new Marshaller(parameter));
                             } else {
-                                entityUnmarshallerTypes.add(new org.openapitools.codegen.languages.Marshaller(parameter));
+                                entityUnmarshallerTypes.add(new Marshaller(parameter));
                             }
                         }
                     }
                 }
-                HashSet<org.openapitools.codegen.languages.Marshaller> operationSpecificMarshallers = new HashSet<>();
+                HashSet<Marshaller> operationSpecificMarshallers = new HashSet<>();
                 for (CodegenResponse response : op.responses) {
                     if (!response.primitiveType) {
-                        org.openapitools.codegen.languages.Marshaller marshaller = new org.openapitools.codegen.languages.Marshaller(response);
+                        Marshaller marshaller = new Marshaller(response);
                         entityMarshallerTypes.add(marshaller);
                         operationSpecificMarshallers.add(marshaller);
                     }

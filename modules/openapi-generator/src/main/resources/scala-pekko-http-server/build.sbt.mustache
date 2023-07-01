@@ -1,9 +1,12 @@
 version := "{{artifactVersion}}"
 name := "{{artifactId}}"
 organization := "{{groupId}}"
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.11"
+
+resolvers +=
+  "Apache Snapshots" at "https://repository.apache.org/content/repositories/snapshots"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream" % "2.5.21",
-  "com.typesafe.akka" %% "akka-http" % "{{akkaHttpVersion}}"
+  "org.apache.pekko" %% "pekko-stream" % "{{pekkoVersion}}",
+  "org.apache.pekko" %% "pekko-http" % "{{pekkoHttpVersion}}"
 )

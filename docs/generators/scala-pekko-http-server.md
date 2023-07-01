@@ -1,27 +1,28 @@
 ---
-title: Documentation for the scala-akka-http-server Generator
+title: Documentation for the scala-pekko-http-server Generator
 ---
 
 ## METADATA
 
 | Property | Value | Notes |
 | -------- | ----- | ----- |
-| generator name | scala-akka-http-server | pass this to the generate command after -g |
+| generator name | scala-pekko-http-server | pass this to the generate command after -g |
 | generator stability | BETA | |
 | generator type | SERVER | |
 | generator language | Scala | |
 | generator default templating engine | mustache | |
-| helpTxt | Generates a scala-akka-http server (beta). | |
+| helpTxt | Generates a scala-pekko-http server (beta). | |
 
 ## CONFIG OPTIONS
 These options may be applied as additional-properties (cli) or configOptions (plugins). Refer to [configuration docs](https://openapi-generator.tech/docs/configuration) for more details.
 
 | Option | Description | Values | Default |
 | ------ | ----------- | ------ | ------- |
-|akkaHttpVersion|The version of akka-http| |10.1.10|
+|pekkoVersion|The version of pekko| |1.0.0-RC3+5-be45ac14-SNAPSHOT|
+|pekkoHttpVersion|The version of pekko-http| |0.0.0+4455-91b6086b-SNAPSHOT|
 |allowUnicodeIdentifiers|boolean, toggles whether unicode identifiers are allowed in names or not, default is false| |false|
 |apiPackage|package for generated api classes| |null|
-|artifactId|artifactId| |openapi-scala-akka-http-server|
+|artifactId|artifactId| |openapi-scala-pekko-http-server|
 |artifactVersion|artifact version in generated pom.xml. This also becomes part of the generated library's filename| |1.0.0|
 |asManagedSources|Resulting files cab be used as managed resources. No build files or default controllers will be generated| |false|
 |dateLibrary|Option. Date library to use|<dl><dt>**joda**</dt><dd>Joda (for legacy app)</dd><dt>**java8**</dt><dd>Java 8 native JSR310 (preferred for JDK 1.8+)</dd></dl>|java8|

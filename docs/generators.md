@@ -129,6 +129,7 @@ The following generators are available:
 * [ruby-sinatra](generators/ruby-sinatra.md)  
 * [rust-server](generators/rust-server.md)  
 * [scala-akka-http-server (beta)](generators/scala-akka-http-server.md)  
+* [scala-pekko-http-server](generators/scala-pekko-http-server.md)  
 * [scala-finch](generators/scala-finch.md)  
 * [scala-lagom-server](generators/scala-lagom-server.md)  
 * [scala-play-server](generators/scala-play-server.md)  
