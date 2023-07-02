@@ -11,15 +11,13 @@ title: Documentation for the scala-pekko-http-server Generator
 | generator type | SERVER | |
 | generator language | Scala | |
 | generator default templating engine | mustache | |
-| helpTxt | Generates a scala-pekko-http server (beta). | |
+| helpTxt | Generates a scala-pekko-http server. | |
 
 ## CONFIG OPTIONS
 These options may be applied as additional-properties (cli) or configOptions (plugins). Refer to [configuration docs](https://openapi-generator.tech/docs/configuration) for more details.
 
 | Option | Description | Values | Default |
 | ------ | ----------- | ------ | ------- |
-|pekkoVersion|The version of pekko| |1.0.0-RC3+5-be45ac14-SNAPSHOT|
-|pekkoHttpVersion|The version of pekko-http| |0.0.0+4455-91b6086b-SNAPSHOT|
 |allowUnicodeIdentifiers|boolean, toggles whether unicode identifiers are allowed in names or not, default is false| |false|
 |apiPackage|package for generated api classes| |null|
 |artifactId|artifactId| |openapi-scala-pekko-http-server|
@@ -34,6 +32,8 @@ These options may be applied as additional-properties (cli) or configOptions (pl
 |legacyDiscriminatorBehavior|Set to false for generators with better support for discriminators. (Python, Java, Go, PowerShell, C# have this enabled by default).|<dl><dt>**true**</dt><dd>The mapping in the discriminator includes descendent schemas that allOf inherit from self and the discriminator mapping schemas in the OAS document.</dd><dt>**false**</dt><dd>The mapping in the discriminator includes any descendent schemas that allOf inherit from self, any oneOf schemas, any anyOf schemas, any x-discriminator-values, and the discriminator mapping schemas in the OAS document AND Codegen validates that oneOf and anyOf schemas contain the required discriminator and throws an error if the discriminator is missing.</dd></dl>|true|
 |modelPackage|package for generated models| |null|
 |modelPropertyNaming|Naming convention for the property: 'camelCase', 'PascalCase', 'snake_case' and 'original', which keeps the original name| |camelCase|
+|pekkoHttpVersion|The version of pekko-http| |0.0.0+4455-91b6086b-SNAPSHOT|
+|pekkoVersion|The version of pekko| |1.0.0-RC3+5-be45ac14-SNAPSHOT|
 |prependFormOrBodyParameters|Add form or body parameters to the beginning of the parameter list.| |false|
 |sortModelPropertiesByRequiredFlag|Sort model properties to place required parameters before optional parameters.| |true|
 |sortParamsByRequiredFlag|Sort method arguments to place required parameters before optional parameters.| |true|
